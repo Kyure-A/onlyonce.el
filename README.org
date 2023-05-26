@@ -1,9 +1,18 @@
-[[https://github.com/Kyure-A/onlyonce][https://img.shields.io/github/tag/Kyure-A/onlyonce.svg?style=flat-square]]
-[[file:LICENSE][https://img.shields.io/github/license/Kyure-A/onlyonce.svg?style=flat-square]]
-[[https://codecov.io/gh/Kyure-A/onlyonce?branch=master][https://img.shields.io/codecov/c/github/Kyure-A/onlyonce.svg?style=flat-square]]
-[[https://github.com/Kyure-A/onlyonce/actions][https://img.shields.io/github/actions/workflow/status/Kyure-A/onlyonce/test.yml.svg?branch=master&style=flat-square]]
-* onlyonce: Short description of your project
+[[https://github.com/Kyure-A/onlyonce][https://img.shields.io/github/tag/Kyure-A/onlyonce.el.svg?style=flat-square]]
+[[file:LICENSE][https://img.shields.io/github/license/Kyure-A/onlyonce.el.svg?style=flat-square]]
+[[https://codecov.io/gh/Kyure-A/onlyonce?branch=master][https://img.shields.io/codecov/c/github/Kyure-A/onlyonce.el.svg?style=flat-square]]
+[[https://github.com/Kyure-A/onlyonce/actions][https://img.shields.io/github/actions/workflow/status/Kyure-A/onlyonce.el/test.yml.svg?branch=master&style=flat-square]]
+* onlyonce.el: Package that executes a function that you want to execute only once the first time.
 
-* How to Use?
+* How to Use
+
+if you use leaf:
+#+begin_src emacs-lisp
+  (leaf onlyonce
+    :config
+    (onlyonce-add '(you-want-to-execute-only-once-hogefuga-function))
+    (onlyonce-startup))
+#+end_src
+
 * License
   This package is licensed by GPLv3. See [[file:LICENSE][LICENSE]].
