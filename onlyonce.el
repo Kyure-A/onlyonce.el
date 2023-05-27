@@ -35,7 +35,7 @@
 (defgroup onlyonce ()
   "A tool to run functions that you want to run only once during the installation of dotfiles in init.el."
   :group 'tools
-  :prefix "onlyonce"
+  :prefix "onlyonce-"
   :link '(url-link "https://github.com/Kyure-A/onlyonce.el"))
 
 (defcustom onlyonce-custom-file custom-file
@@ -50,21 +50,19 @@
 
 (defun onlyonce-add (func)
   "Add function that you want to be loaded automatically in init.el but executed *only once* during dotfiles installation."
-  (add-to-list 'onlyonce-executable-list 'func))
+  (add-to-list 'onlyonce-executable-list `(lambda () (funcall ',func))))
 
 (defun onlyonce-executed-p ()
   "Return a boolean (t or nil) indicating whether or not it has already been executed."
-  (interactive)
-  (if (boundp 'onlyonce-executed) t nil))
+  (boundp 'onlyonce-executed))
 
 (defun onlyonce-startup ()
   "Execute a set of functions added by onlyonce-add that you want executed only once."
   (interactive)
   (unless (onlyonce-executed-p)
     (custom-set-variables 'onlyonce-executed t)
-    (cl-loop as i
-	     from 0 to (length 'onlyonce-executable-list)
-	     do (funcall (nth i 'onlyonce-executable-list)))))
+    (cl-loop for i from 0 to (length onlyonce-executable-list)
+             do (funcall (nth i onlyonce-executable-list)))))
 
 (provide 'onlyonce)
 
