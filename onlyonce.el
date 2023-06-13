@@ -29,8 +29,6 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'f)
-(require 's)
 
 (defgroup onlyonce ()
   "A tool to run functions that you want to run only once during the installation of dotfiles in init.el."
@@ -39,18 +37,26 @@
   :link '(url-link "https://github.com/Kyure-A/onlyonce.el"))
 
 (defcustom onlyonce-custom-file custom-file
+  "This variable is used to set the file that records whether or not the command added by onlyonce-add has been executed."
   :group 'onlyonce
   :version ""
   :type 'string)
 
 (defcustom onlyonce-executable-list '()
+  "List of commands to execute with onlyonce.el."
   :group 'onlyonce
   :version ""
   :type '(repeat function))
 
-(defun onlyonce-add (func)
-  "Add function that you want to be loaded automatically in init.el but executed *only once* during dotfiles installation."
-  (add-to-list 'onlyonce-executable-list `(lambda () (funcall ',func))))
+(defcustom onlyonce-executed nil
+  "Indicates whether onlyonce.el has been executed.  This variable is referenced by onlyonce-executed-p."
+  :group 'onlyonce
+  :version ""
+  :type 'boolean)
+
+(defmacro onlyonce-add (function_name)
+  "Add function (FUNCTION_NAME) that you want to be loaded automatically in init.el but executed *only once* during dotfiles installation."
+  `(add-to-list 'onlyonce-executable-list ,function_name))
 
 (defun onlyonce-executed-p ()
   "Return a boolean (t or nil) indicating whether or not it has already been executed."
@@ -61,7 +67,9 @@
   (interactive)
   (unless (onlyonce-executed-p)
     (custom-set-variables 'onlyonce-executed t)
-    (cl-loop for i from 0 to (length onlyonce-executable-list)
+    (cl-loop for i
+	     from 0
+	     to (length onlyonce-executable-list)
              do (funcall (nth i onlyonce-executable-list)))))
 
 (provide 'onlyonce)
