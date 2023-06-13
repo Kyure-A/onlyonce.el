@@ -48,7 +48,7 @@
   :version ""
   :type '(repeat function))
 
-(defcustom onlyonce-executed nil
+(defcustom onlyonce-executed-p nil
   "Indicates whether onlyonce.el has been executed.  This variable is referenced by onlyonce-executed-p."
   :group 'onlyonce
   :version ""
@@ -58,19 +58,16 @@
   "Add function (FUNCTION_NAME) that you want to be loaded automatically in init.el but executed *only once* during dotfiles installation."
   `(add-to-list 'onlyonce-executable-list ,function_name))
 
-(defun onlyonce-executed-p ()
-  "Return a boolean (t or nil) indicating whether or not it has already been executed."
-  (boundp 'onlyonce-executed))
-
 (defun onlyonce-startup ()
   "Execute a set of functions added by onlyonce-add that you want executed only once."
-  (interactive)
-  (unless (onlyonce-executed-p)
-    (custom-set-variables 'onlyonce-executed t)
-    (cl-loop for i
-	     from 0
-	     to (length onlyonce-executable-list)
-             do (funcall (nth i onlyonce-executable-list)))))
+  (when (eq onlyonce-executed-p nil)
+    (progn (custom-set-variables '(onlyonce-executed-p t))
+	   (cl-loop for i
+		    from 0
+		    to (length onlyonce-executable-list)
+		    do
+		    (funcall (nth i onlyonce-executable-list))
+		    (message "%s is executed by onlyonce.el." (nth i onlyonce-executable-list))))))
 
 (provide 'onlyonce)
 

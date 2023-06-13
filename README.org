@@ -11,7 +11,7 @@ if you use leaf:
 #+begin_src emacs-lisp
   (leaf onlyonce
     :config
-    (onlyonce-add '(you-want-to-execute-only-once-hogefuga-function))
+    (onlyonce-add 'you-want-to-execute-only-once-hogefuga-function)
     (onlyonce-startup))
 #+end_src
 
