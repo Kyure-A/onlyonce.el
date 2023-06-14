@@ -28,8 +28,6 @@
 
 ;;; Code:
 
-(require 'cl-lib)
-
 (defgroup onlyonce ()
   "A tool to run functions that you want to run only once during the installation of dotfiles in init.el."
   :group 'tools
@@ -49,7 +47,8 @@
   :type '(repeat function))
 
 (defcustom onlyonce-executed-p nil
-  "Indicates whether onlyonce.el has been executed.  This variable is referenced by onlyonce-executed-p."
+  "Indicates whether onlyonce.el has been executed.
+This variable is referenced by onlyonce-executed-p."
   :group 'onlyonce
   :version ""
   :type 'boolean)
@@ -60,14 +59,11 @@
 
 (defun onlyonce-startup ()
   "Execute a set of functions added by onlyonce-add that you want executed only once."
-  (when (eq onlyonce-executed-p nil)
+  (when (eq nil onlyonce-executed-p)
     (progn (custom-set-variables '(onlyonce-executed-p t))
-	   (cl-loop for i
-		    from 0
-		    to (length onlyonce-executable-list)
-		    do
-		    (funcall (nth i onlyonce-executable-list))
-		    (message "%s is executed by onlyonce.el." (nth i onlyonce-executable-list))))))
+	   (dolist (command onlyonce-executable-list t)
+	     (progn (funcall command)
+		    (message "%s is executed by onlyonce.el." command))))))
 
 (provide 'onlyonce)
 
