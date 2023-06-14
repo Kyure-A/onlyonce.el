@@ -35,33 +35,35 @@
   :link '(url-link "https://github.com/Kyure-A/onlyonce.el"))
 
 (defcustom onlyonce-custom-file custom-file
-  "This variable is used to set the file that records whether or not the command added by onlyonce-add has been executed."
+  "This variable is used to set the file.
+It records whether or not the command added by onlyonce-add has been executed."
   :group 'onlyonce
   :version ""
   :type 'string)
 
-(defcustom onlyonce-executable-list '()
+(defcustom onlyonce--executable-list '()
   "List of commands to execute with onlyonce.el."
   :group 'onlyonce
   :version ""
   :type '(repeat function))
 
-(defcustom onlyonce-executed-p nil
+(defcustom onlyonce--executed-p nil
   "Indicates whether onlyonce.el has been executed.
 This variable is referenced by onlyonce-executed-p."
   :group 'onlyonce
   :version ""
   :type 'boolean)
 
-(defmacro onlyonce-add (function_name)
-  "Add function (FUNCTION_NAME) that you want to be loaded automatically in init.el but executed *only once* during dotfiles installation."
-  `(add-to-list 'onlyonce-executable-list ,function_name))
+(defmacro onlyonce-add (command)
+  "Add COMMAND that you want to be loaded automatically.
+and executed *only once* during dotfiles installation."
+  `(add-to-list 'onlyonce--executable-list ,command))
 
 (defun onlyonce-startup ()
-  "Execute a set of functions added by onlyonce-add that you want executed only once."
-  (when (eq nil onlyonce-executed-p)
-    (progn (custom-set-variables '(onlyonce-executed-p t))
-	   (dolist (command onlyonce-executable-list t)
+  "Execute a set of functions added that you want executed only once."
+  (when (eq nil onlyonce--executed-p)
+    (progn (custom-set-variables '(onlyonce--executed-p t))
+	   (dolist (command onlyonce--executable-list t)
 	     (progn (funcall command)
 		    (message "%s is executed by onlyonce.el." command))))))
 
