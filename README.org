@@ -7,11 +7,15 @@ Package that executes a function that you want to execute only once the first ti
 
 * How to Use
 
-if you use leaf:
+if you use leaf and quelpa-leaf:
 #+begin_src emacs-lisp
   (leaf onlyonce
+    :require t
+    :quelpa (onlyonce :repo "Kyure-A/onlyonce.el"
+		    :fetcher github
+		    :upgrade t)
     :config
-    (onlyonce-add 'you-want-to-execute-only-once-hogefuga-function)
+    (onlyonce-add 'you-want-to-execute-onlyonce-function)
     (onlyonce-startup))
 #+end_src
 
