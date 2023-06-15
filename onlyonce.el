@@ -73,7 +73,7 @@ It records whether or not the command added by onlyonce-add has been executed."
     (progn (custom-set-variables '(onlyonce--executed-p t))
 	   (dolist (command-args onlyonce--executable-list t)
 	     (let* ((command (car (onlyonce--convert-command-from-string command-args)))
-		    (args (cdr (onlyonce--convert-command-from-string commands-args))))
+		    (args (cdr (onlyonce--convert-command-from-string command-args))))
 	       (progn (apply command args)
 		      (message "%s is executed by onlyonce.el." command)))))))
 
