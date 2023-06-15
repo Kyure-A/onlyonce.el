@@ -70,12 +70,12 @@ It records whether or not the command added by onlyonce-add has been executed."
 (defun onlyonce-startup ()
   "Execute a set of functions added that you want executed only once."
   (when (eq onlyonce--executed-p nil)
-    (custom-set-variables '(onlyonce--executed-p
-			    (dolist (command-args onlyonce--executable-list t)
-			      (let* ((command (car (onlyonce--convert-command-from-string command-args)))
-				     (args (cdr (onlyonce--convert-command-from-string command-args))))
-				(progn (apply command args)
-				       (message "%s is executed by onlyonce.el." command))))))))
+    (progn (dolist (command-args onlyonce--executable-list t)
+	     (let* ((command (car (onlyonce--convert-command-from-string command-args)))
+		    (args (cdr (onlyonce--convert-command-from-string command-args))))
+	       (progn (apply command args)
+		      (message "%s is executed by onlyonce.el." command))))
+	   (custom-set-variables '(onlyonce--executed-p t)))))
 
 (provide 'onlyonce)
 
