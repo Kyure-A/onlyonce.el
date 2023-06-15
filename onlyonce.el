@@ -28,6 +28,8 @@
 
 ;;; Code:
 
+(require 's)
+
 (defgroup onlyonce ()
   "A tool to run functions that you want to run only once during the installation of dotfiles in init.el."
   :group 'tools
@@ -45,7 +47,7 @@ It records whether or not the command added by onlyonce-add has been executed."
   "List of commands to execute with onlyonce.el."
   :group 'onlyonce
   :version ""
-  :type '(repeat function))
+  :type '(repeat string))
 
 (defcustom onlyonce--executed-p nil
   "Indicates whether onlyonce.el has been executed.
@@ -54,19 +56,28 @@ This variable is referenced by onlyonce-executed-p."
   :version ""
   :type 'boolean)
 
-(defmacro onlyonce-add (command)
-  "Add COMMAND that you want to be loaded automatically.
+(defun onlyonce-add (command)
+  "Add COMMAND (string) that you want to be loaded automatically.
 and executed *only once* during dotfiles installation."
-  `(add-to-list 'onlyonce--executable-list ,command))
+  (add-to-list 'onlyonce--executable-list command))
+
+(defun onlyonce--convert-from-string (command)
+  "COMMAND."
+  (let* ((converted '())
+	 (commands (s-split " " command)))
+    (dolist (arg commands t)
+      (intern arg)
+      ;; I wanna return list
+      )))
 
 (defun onlyonce-startup ()
   "Execute a set of functions added that you want executed only once."
   (when (eq nil onlyonce--executed-p)
     (progn (custom-set-variables '(onlyonce--executed-p t))
 	   (dolist (command onlyonce--executable-list t)
-	     (progn (funcall command) ;; 現在は引数を取るコマンドを実行できない（例: (push 'a 1)）のでどうにかする
+	     (progn (funcall command) ;; 現在は引数を取るコマンドを実行できない（例: (push a 1)）のでどうにかする
 		    (message "%s is executed by onlyonce.el." command))))))
 
-(provide 'onlyonce)
+  (provide 'onlyonce)
 
 ;;; onlyonce.el ends here
