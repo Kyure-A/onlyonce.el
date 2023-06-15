@@ -64,7 +64,7 @@ and executed *only once* during dotfiles installation."
   (when (eq nil onlyonce--executed-p)
     (progn (custom-set-variables '(onlyonce--executed-p t))
 	   (dolist (command onlyonce--executable-list t)
-	     (progn (funcall command)
+	     (progn (funcall command) ;; 現在は引数を取るコマンドを実行できない（例: (push 'a 1)）のでどうにかする
 		    (message "%s is executed by onlyonce.el." command))))))
 
 (provide 'onlyonce)
