@@ -50,34 +50,33 @@ It records whether or not the command added by onlyonce-add has been executed."
   :type '(repeat string))
 
 (defcustom onlyonce--executed-p nil
-  "Indicates whether onlyonce.el has been executed.
-This variable is referenced by onlyonce-executed-p."
+  "Indicates whether onlyonce.el has been executed or not."
   :group 'onlyonce
   :version ""
   :type 'boolean)
 
 (defun onlyonce-add (command)
-  "Add COMMAND (string) that you want to be loaded automatically.
-and executed *only once* during dotfiles installation."
+  "Add COMMAND (string) that you want to be loaded automatically.and executed *only once* during dotfiles installation."
   (add-to-list 'onlyonce--executable-list command))
 
-(defun onlyonce--convert-from-string (command)
-  "COMMAND."
+(defun onlyonce--convert-command-from-string (command)
+  "Interpret COMMANDs (and their arguments) and convert them into a usable form with onlyonce-startup."
   (let* ((converted '())
-	 (commands (s-split " " command)))
+	 (commands (s-split " " (s-replace "'" "" command))))
     (dolist (arg commands t)
-      (intern arg)
-      ;; I wanna return list
-      )))
+      (push (intern arg) converted))
+    (reverse converted)))
 
 (defun onlyonce-startup ()
   "Execute a set of functions added that you want executed only once."
-  (when (eq nil onlyonce--executed-p)
+  (when (eq onlyonce--executed-p nil)
     (progn (custom-set-variables '(onlyonce--executed-p t))
-	   (dolist (command onlyonce--executable-list t)
-	     (progn (funcall command) ;; 現在は引数を取るコマンドを実行できない（例: (push a 1)）のでどうにかする
-		    (message "%s is executed by onlyonce.el." command))))))
+	   (dolist (command-args onlyonce--executable-list t)
+	     (let* ((command (car (onlyonce--convert-command-from-string command-args)))
+		    (args (cdr (onlyonce--convert-command-from-string commands-args))))
+	       (progn (apply command args)
+		      (message "%s is executed by onlyonce.el." command)))))))
 
-  (provide 'onlyonce)
+(provide 'onlyonce)
 
 ;;; onlyonce.el ends here
