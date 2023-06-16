@@ -15,7 +15,9 @@ if you use leaf and quelpa-leaf:
 		    :fetcher github
 		    :upgrade t)
     :config
-    (onlyonce-add 'you-want-to-execute-onlyonce-function)
+    (onlyonce-add 'you-want-to-execute-onlyonce-function) ;; command without arguments
+    (onlyonce-add '(you-want-to-execute-onlyonce-function 'hogehoge)) ;; command with arguments (can take any number of arguments) 
+    (onlyonce-add "you-want-to-execute-onlyonce-function 'hogehoge") ;; string is also possible
     (onlyonce-startup))
 #+end_src
 
