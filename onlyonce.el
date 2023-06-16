@@ -116,8 +116,8 @@ It records whether or not the command added by onlyonce-add has been executed."
 		    (args (cdr (onlyonce--convert-command command-args))))
 	       (progn (apply command args)
 		      (message "%s is executed by onlyonce.el." command))))
-	   (custom-set-variables '(onlyonce-executed-p t))))
-  onlyonce-executed-p)
+	   (custom-set-variables '(onlyonce-executed-p t))
+	   (custom-save-all))))
 
 (provide 'onlyonce)
 
