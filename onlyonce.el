@@ -78,19 +78,21 @@ It records whether or not the command added by onlyonce-add has been executed."
   (let* ((converted '())
 	 (commands '()))
     (dolist (arg command t)
-      (if (symbolp arg)
-	  (push (symbol-name arg) commands)
-	(while (consp arg)
-	  (setf arg (eval arg)))
-	(push (symbol-name arg) commands)))
+      (if (stringp arg)
+	  (push arg commands)
+	(if (symbolp arg)
+	    (push arg commands)
+	  (while (consp arg)
+	    (setf arg (eval arg)))
+	  (push arg commands))))
     (dolist (arg commands t)
-      (push (s-replace "'" "" arg) converted))
+      (push arg converted))
     converted))
 
 (defun onlyonce--convert-command-from-symbol (command)
   "Interpret COMMANDs (and their arguments) and convert them into a usable form with onlyonce-startup."
   (cl-check-type command symbol)
-  (list (symbol-name command)))
+  (list command))
 
 (defun onlyonce--convert-command (command)
   "Interpret COMMANDs (and their arguments) and convert them into a usable form with onlyonce-startup."

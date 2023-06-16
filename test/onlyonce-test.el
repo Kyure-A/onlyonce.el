@@ -33,8 +33,19 @@
 
 (require 'onlyonce)
 
+(ert-deftest test-onlyonce--convert-command-from-list ()
+  (should (equal (onlyonce--convert-command-from-list '(package-install 'onlyonce)) '(package-install onlyonce)))
+  (should (equal (onlyonce--convert-command-from-list '(setq hoge "onlyonce")) '(setq hoge "onlyonce"))))
 
+(ert-deftest test-onlyonce--convert-command-from-string ()
+  (should (equal (onlyonce--convert-command-from-string "package-install onlyonce") '(package-install onlyonce)))
+  ;; (should (equal (onlyonce--convert-command-from-string "setq hoge \"onlyonce\"") '(setq hoge "onlyonce")))
+  )
 
+(ert-deftest test-onlyonce--convert-command-from-symbol ()
+  (should (equal (onlyonce--convert-command-from-symbol 'onlyonce) '(onlyonce))))
+
+(ert-deftest test-onlyonce-startup ())
 
 (provide 'onlyonce-test)
 ;;; onlyonce-test.el ends here
