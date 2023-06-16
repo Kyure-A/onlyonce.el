@@ -43,6 +43,9 @@ It records whether or not the command added by onlyonce-add has been executed."
   :version ""
   :type 'string)
 
+(when (file-exists-p onlyonce-custom-file)
+  (load onlyonce-custom-file))
+
 (defcustom onlyonce--executable-list '()
   "List of commands to execute with onlyonce.el."
   :group 'onlyonce
@@ -54,9 +57,6 @@ It records whether or not the command added by onlyonce-add has been executed."
   :group 'onlyonce
   :version ""
   :type 'boolean)
-
-(when (file-exists-p onlyonce-custom-file)
-  (load onlyonce-custom-file))
 
 (defun onlyonce-add (command)
   "Add COMMAND (string) that you want to be loaded automatically.and executed *only once* during dotfiles installation."
@@ -70,9 +70,30 @@ It records whether or not the command added by onlyonce-add has been executed."
       (push (intern arg) converted))
     (reverse converted)))
 
+(defun onlyonce--convert-command-from-list (command)
+  "Interpret COMMANDs (and their arguments) and convert them into a usable form with onlyonce-startup."
+  (let* ((converted '())
+	 (commands '()))
+    (dolist (arg command t)
+      (if (symbolp arg)
+	  (push (symbol-name arg) commands)
+	(while (consp arg)
+	  (setq arg (eval arg)))
+	(push (symbol-name arg) commands)))
+    (dolist (arg commands t)
+      (push (s-replace "'" "" arg) converted))
+    converted))
+
+(defun onlyonce--convert-command (command)
+  ;; not work
+  (when (listp command)
+    (onlyonce--convert-command-from-list command))
+  (when (stringp command)
+    (onlyonce--convert-command-from-string command)))
+
 (defun onlyonce-startup ()
   "Execute a set of functions added that you want executed only once."
-  (when (eq onlyonce--executed-p nil)
+  (unless (eval onlyonce--executed-p)
     (progn (dolist (command-args onlyonce--executable-list t)
 	     (let* ((command (car (onlyonce--convert-command-from-string command-args)))
 		    (args (cdr (onlyonce--convert-command-from-string command-args))))
