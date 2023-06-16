@@ -59,8 +59,6 @@ It records whether or not the command added by onlyonce-add has been executed."
   :version ""
   :type 'boolean)
 
-(defalias 'onlyonce-executed-p 'onlyonce-executed?)
-
 (defun onlyonce-add (command)
   "Add COMMAND (string) that you want to be loaded automatically.and executed *only once* during dotfiles installation."
   (add-to-list 'onlyonce--executable-list command))
