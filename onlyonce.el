@@ -28,6 +28,7 @@
 
 ;;; Code:
 
+(require 'cl-lib)
 (require 's)
 
 (defgroup onlyonce ()
@@ -64,6 +65,7 @@ It records whether or not the command added by onlyonce-add has been executed."
 
 (defun onlyonce--convert-command-from-string (command)
   "Interpret COMMANDs (and their arguments) and convert them into a usable form with onlyonce-startup."
+  (cl-check-type command string)
   (let* ((converted '())
 	 (commands (s-split " " (s-replace "'" "" command))))
     (dolist (arg commands t)
@@ -72,34 +74,45 @@ It records whether or not the command added by onlyonce-add has been executed."
 
 (defun onlyonce--convert-command-from-list (command)
   "Interpret COMMANDs (and their arguments) and convert them into a usable form with onlyonce-startup."
+  (cl-check-type command list)
   (let* ((converted '())
 	 (commands '()))
     (dolist (arg command t)
       (if (symbolp arg)
 	  (push (symbol-name arg) commands)
 	(while (consp arg)
-	  (setq arg (eval arg)))
+	  (setf arg (eval arg)))
 	(push (symbol-name arg) commands)))
     (dolist (arg commands t)
       (push (s-replace "'" "" arg) converted))
     converted))
 
+(defun onlyonce--convert-command-from-symbol (command)
+  "Interpret COMMANDs (and their arguments) and convert them into a usable form with onlyonce-startup."
+  (cl-check-type command symbol)
+  (list (symbol-name command)))
+
 (defun onlyonce--convert-command (command)
-  ;; not work
-  (when (listp command)
-    (onlyonce--convert-command-from-list command))
-  (when (stringp command)
-    (onlyonce--convert-command-from-string command)))
+  "Interpret COMMANDs (and their arguments) and convert them into a usable form with onlyonce-startup."
+  (let* ((ret nil))
+    (when (symbolp command)
+      (setf ret (onlyonce--convert-command-from-symbol command)))
+    (when (listp command)
+      (setf ret (onlyonce--convert-command-from-list command)))
+    (when (stringp command)
+      (setf ret (onlyonce--convert-command-from-string command)))
+    ret))
 
 (defun onlyonce-startup ()
   "Execute a set of functions added that you want executed only once."
   (unless (eval onlyonce--executed-p)
     (progn (dolist (command-args onlyonce--executable-list t)
-	     (let* ((command (car (onlyonce--convert-command-from-string command-args)))
-		    (args (cdr (onlyonce--convert-command-from-string command-args))))
+	     (let* ((command (car (onlyonce--convert-command command-args)))
+		    (args (cdr (onlyonce--convert-command command-args))))
 	       (progn (apply command args)
 		      (message "%s is executed by onlyonce.el." command))))
-	   (custom-set-variables '(onlyonce--executed-p t)))))
+	   (custom-set-variables '(onlyonce--executed-p t))))
+  onlyonce--executed-p)
 
 (provide 'onlyonce)
 
