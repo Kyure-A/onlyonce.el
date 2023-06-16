@@ -2,8 +2,7 @@
 
 (package (onlyonce
           (recipe . (:fetcher github :repo "Kyure-A/onlyonce.el")))
-	 (s
-	  (recipe . (:fetcher github :repo "magnars/s.el"))))
+	 (s))
 
 (dev-dependency undercover)
 
