@@ -51,13 +51,15 @@ It records whether or not the command added by onlyonce-add has been executed."
   "List of commands to execute with onlyonce.el."
   :group 'onlyonce
   :version ""
-  :type '(repeat string))
+  :type '(repeat symbol))
 
-(defcustom onlyonce--executed-p nil
+(defcustom onlyonce-executed-p nil
   "Indicates whether onlyonce.el has been executed or not."
   :group 'onlyonce
   :version ""
   :type 'boolean)
+
+(defalias 'onlyonce-executed-p 'onlyonce-executed?)
 
 (defun onlyonce-add (command)
   "Add COMMAND (string) that you want to be loaded automatically.and executed *only once* during dotfiles installation."
@@ -107,14 +109,15 @@ It records whether or not the command added by onlyonce-add has been executed."
 
 (defun onlyonce-startup ()
   "Execute a set of functions added that you want executed only once."
-  (unless (eval onlyonce--executed-p)
+  (interactive)
+  (unless (eval onlyonce-executed-p)
     (progn (dolist (command-args onlyonce--executable-list t)
 	     (let* ((command (car (onlyonce--convert-command command-args)))
 		    (args (cdr (onlyonce--convert-command command-args))))
 	       (progn (apply command args)
 		      (message "%s is executed by onlyonce.el." command))))
-	   (custom-set-variables '(onlyonce--executed-p t))))
-  onlyonce--executed-p)
+	   (custom-set-variables '(onlyonce-executed-p t))))
+  onlyonce-executed-p)
 
 (provide 'onlyonce)
 

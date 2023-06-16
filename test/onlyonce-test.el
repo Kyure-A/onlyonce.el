@@ -34,16 +34,17 @@
 (require 'onlyonce)
 
 (ert-deftest test-onlyonce--convert-command-from-list ()
-  (should (equal (onlyonce--convert-command-from-list '(package-install 'onlyonce)) '(package-install onlyonce)))
+  (should (equal (onlyonce--convert-command-from-list '(you-want-to-execute-onlyonce-function 'hogehoge)) '(you-want-to-execute-onlyonce-function hogehoge)))
   (should (equal (onlyonce--convert-command-from-list '(setq hoge "onlyonce")) '(setq hoge "onlyonce"))))
 
 (ert-deftest test-onlyonce--convert-command-from-string ()
+  (should (equal (onlyonce--convert-command-from-string "you-want-to-execute-onlyonce-function 'hogehoge") '(you-want-to-execute-onlyonce-function hogehoge)))
   (should (equal (onlyonce--convert-command-from-string "package-install onlyonce") '(package-install onlyonce)))
   ;; (should (equal (onlyonce--convert-command-from-string "setq hoge \"onlyonce\"") '(setq hoge "onlyonce")))
   )
 
 (ert-deftest test-onlyonce--convert-command-from-symbol ()
-  (should (equal (onlyonce--convert-command-from-symbol 'onlyonce) '(onlyonce))))
+  (should (equel (onlyonce--convert-command-from-symbol 'you-want-to-execute-onlyonce-function) '(you-want-to-execute-onlyonce-function))))
 
 (ert-deftest test-onlyonce-startup ())
 
