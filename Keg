@@ -1,9 +1,8 @@
-(source gnu nongnu melpa)
+(source gnu melpa)
 
-(package (onlyonce
-          (recipe . (onlyonce :fetcher github :repo "Kyure-A/onlyonce.el" :files ("onlyonce.el"))))
-	 (s
-	  (recipe . (s :fetcher github :repo "magnars/s.el" :files ("s.el")))))
+(package (onlyonce (recipe . (onlyonce :fetcher github :repo "Kyure-A/onlyonce.el" :files ("onlyonce.el"))))
+	 ;; (s(recipe . (s :fetcher github :repo "magnars/s.el" :files ("s.el"))))
+	 )
 
 (dev-dependency undercover)
 
