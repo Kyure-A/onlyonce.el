@@ -38,36 +38,36 @@
   :link '(url-link "https://github.com/Kyure-A/onlyonce.el"))
 
 (defcustom onlyonce--executable-list '()
-  "List of commands to execute with onlyonce.el."
+  "List of commands to execute with onlyonce.el.
+Commands in this list are normalized by onlyonce-convert-command-*."
   :group 'onlyonce
-  :version ""
-  :type '(repeat symbol))
+  :version "")
 
 (defcustom onlyonce-executed-p nil
-  "Indicates whether onlyonce.el has been executed or not."
+  "Indicates whether onlyonce.el has been executed or not.
+This variable is initialized to t after onlyonce-startup is executed and added to custom.el."
   :group 'onlyonce
   :version ""
   :type 'boolean)
 
-(defun onlyonce-add (command)
-  "Add COMMAND (string) that you want to be loaded automatically.and executed *only once* during dotfiles installation."
-  (add-to-list 'onlyonce--executable-list command))
+(when (file-exists-p custom-file)
+  (load custom-file))
 
-(defun onlyonce--convert-command-from-string (command)
-  "Interpret COMMANDs (and their arguments) and convert them into a usable form with onlyonce-startup."
-  (cl-check-type command string)
-  (let* ((converted '())
-	 (commands (s-split " " (s-replace "'" "" command))))
+(defun onlyonce--normalize-command-from-string (str)
+  "STR to normalize the command to a form that can be executed with onlyonce-startup."
+  (cl-check-type str string)
+  (let* ((normalized '())
+	 (commands (s-split " " (s-replace "'" "" str))))
     (dolist (arg commands t)
-      (push (intern arg) converted))
-    (reverse converted)))
+      (push (intern arg) normalized))
+    (reverse normalized)))
 
-(defun onlyonce--convert-command-from-list (command)
-  "Interpret COMMANDs (and their arguments) and convert them into a usable form with onlyonce-startup."
-  (cl-check-type command list)
-  (let* ((converted '())
+(defun onlyonce--normalize-command-from-list (lis)
+  "LIS to normalize the command to a form that can be executed with onlyonce-startup."
+  (cl-check-type lis list)
+  (let* ((normalized '())
 	 (commands '()))
-    (dolist (arg command t)
+    (dolist (arg lis t)
       (if (stringp arg)
 	  (push arg commands)
 	(if (symbolp arg)
@@ -76,36 +76,41 @@
 	    (setf arg (eval arg)))
 	  (push arg commands))))
     (dolist (arg commands t)
-      (push arg converted))
-    converted))
+      (push arg normalized))
+    normalized))
 
-(defun onlyonce--convert-command-from-symbol (command)
-  "Interpret COMMANDs (and their arguments) and convert them into a usable form with onlyonce-startup."
-  (cl-check-type command symbol)
-  (list command))
+(defun onlyonce--normalize-command-from-symbol (sym)
+  "SYM to normalize the command to a form that can be executed with onlyonce-startup."
+  (cl-check-type sym symbol)
+  (list sym))
 
-(defun onlyonce--convert-command (command)
-  "Interpret COMMANDs (and their arguments) and convert them into a usable form with onlyonce-startup."
+(defun onlyonce--normalize-command (command)
+  "Interpret COMMANDs (and their arguments) and normalize them into a usable form with onlyonce-startup."
   (let* ((ret nil))
     (when (symbolp command)
-      (setf ret (onlyonce--convert-command-from-symbol command)))
+      (setf ret (onlyonce--normalize-command-from-symbol command)))
     (when (listp command)
-      (setf ret (onlyonce--convert-command-from-list command)))
+      (setf ret (onlyonce--normalize-command-from-list command)))
     (when (stringp command)
-      (setf ret (onlyonce--convert-command-from-string command)))
+      (setf ret (onlyonce--normalize-command-from-string command)))
     ret))
+
+(defun onlyonce-add (command)
+  "Add COMMAND (string) that you want to be loaded automatically.and executed *only once* during dotfiles installation."
+  (add-to-list 'onlyonce--executable-list (onlyonce--normalize-command command)))
 
 (defun onlyonce-startup ()
   "Execute a set of functions added that you want executed only once."
   (interactive)
   (unless (eval onlyonce-executed-p)
     (progn (dolist (command-args onlyonce--executable-list t)
-	     (let* ((command (car (onlyonce--convert-command command-args)))
-		    (args (cdr (onlyonce--convert-command command-args))))
+	     (let* ((command (car command-args))
+		    (args (cdr command-args)))
 	       (progn (apply command args)
 		      (message "%s is executed by onlyonce.el." command))))
 	   (custom-set-variables '(onlyonce-executed-p t))
-	   (custom-save-all))))
+	   (custom-save-all)
+	   onlyonce-executed-p)))
 
 (provide 'onlyonce)
 
