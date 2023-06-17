@@ -14,7 +14,8 @@
        ,@(mapcar (apply-partially #'concat "--load=") test-files)
        "-f" "ert-run-tests-batch-and-exit"))))
  (test-all
-  (keg-shell "keg clean-elc"
+  (keg-shell "keg install s"
+	     "keg clean-elc"
 	     "keg run test"
 	     "keg build"
 	     "keg run test"
