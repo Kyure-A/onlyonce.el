@@ -5,11 +5,15 @@
 * onlyonce.el
 Package that executes a function that you want to execute *onlyonce* the first time.
 
+* Assumed Use Cases
+If you were to re-set up your Linux environment, what would you do first? Yes, you would install [[https://wiki.archlinux.org/title/Dotfiles][dotfiles]]! The wise person will want to automate the setup as much as possible. However, Emacs has a few packages that are not cool in this respect: [[https://github.com/domtronn/all-the-icons.el][all-the-icons]] and [[https://github.com/jming422/fira-code-mode][fira-code-mode]]. These force you to type commands in Emacs to install them! To automate this, I created this package. A similar philosophy is [[https://github.com/jwiegley/use-package/blob/master/use-package-ensure-system-package.el][use-package-ensure-system-package]], but this package is only about setting up system packages and is slightly different from this package.
+
 * How to Use
 
 Please install the package somehow and add the following code to init.el.
 #+begin_src emacs-lisp 
   (require 'onlyonce)
+  ;; It works with any of the following notations!
   (onlyonce-add 'you-want-to-execute-onlyonce-function) ;; command without arguments
   (onlyonce-add '(you-want-to-execute-onlyonce-function 'hogehoge)) ;; command with arguments (can take any number of arguments)
   (onlyonce-add "you-want-to-execute-onlyonce-function 'hogehoge") ;; string is also possible
@@ -23,6 +27,7 @@ if you use [[https://github.com/conao3/leaf.el][leaf]] and [[https://github.com/
 		    :fetcher github
 		    :upgrade t)
     :config
+    ;; It works with any of the following notations!
     (onlyonce-add 'you-want-to-execute-onlyonce-function) ;; command without arguments
     (onlyonce-add '(you-want-to-execute-onlyonce-function 'hogehoge)) ;; command with arguments (can take any number of arguments) 
     (onlyonce-add "you-want-to-execute-onlyonce-function 'hogehoge") ;; string is also possible
@@ -30,9 +35,6 @@ if you use [[https://github.com/conao3/leaf.el][leaf]] and [[https://github.com/
 #+end_src
 
 By putting these codes in init.el, "you-want-to-execute-onlyonce-function" will only be executed the first time it is started.
-
-* Assumed Use Cases
-If you were to re-set up your Linux environment, what would you do first? Yes, you would install [[https://wiki.archlinux.org/title/Dotfiles][dotfiles]]! The wise person will want to automate the setup as much as possible. However, Emacs has a few packages that are not cool in this respect: [[https://github.com/domtronn/all-the-icons.el][all-the-icons]] and [[https://github.com/jming422/fira-code-mode][fira-code-mode]]. These force you to type commands in Emacs to install them! To automate this, I created this package. A similar philosophy is [[https://github.com/jwiegley/use-package/blob/master/use-package-ensure-system-package.el][use-package-ensure-system-package]], but this package is only about setting up system packages and is slightly different from this package.
 
 * License
   This package is licensed by GPLv3. See [[file:LICENSE][LICENSE]].
