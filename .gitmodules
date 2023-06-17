@@ -1,3 +1,0 @@
-[submodule "s"]
-	path = s
-	url = git@github.com:magnars/s.el.git
