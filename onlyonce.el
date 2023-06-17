@@ -37,16 +37,6 @@
   :prefix "onlyonce-"
   :link '(url-link "https://github.com/Kyure-A/onlyonce.el"))
 
-(defcustom onlyonce-custom-file custom-file
-  "This variable is used to set the file.
-It records whether or not the command added by onlyonce-add has been executed."
-  :group 'onlyonce
-  :version ""
-  :type 'string)
-
-(when (file-exists-p onlyonce-custom-file)
-  (load onlyonce-custom-file))
-
 (defcustom onlyonce--executable-list '()
   "List of commands to execute with onlyonce.el."
   :group 'onlyonce
