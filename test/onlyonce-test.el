@@ -44,7 +44,7 @@
   )
 
 (ert-deftest test-onlyonce--convert-command-from-symbol ()
-  (should (equel (onlyonce--convert-command-from-symbol 'you-want-to-execute-onlyonce-function) '(you-want-to-execute-onlyonce-function))))
+  (should (equal (onlyonce--convert-command-from-symbol 'you-want-to-execute-onlyonce-function) '(you-want-to-execute-onlyonce-function))))
 
 (ert-deftest test-onlyonce-startup ())
 
