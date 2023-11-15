@@ -38,15 +38,13 @@
   :link '(url-link "https://github.com/Kyure-A/onlyonce.el"))
 
 (defcustom onlyonce--executable-list '()
-  "List of commands to execute with onlyonce.el.
-Commands in this list are normalized by onlyonce-convert-command-*."
+  "List of commands to execute with onlyonce.el.  Commands in this list are normalized by onlyonce-convert-command-*."
   :group 'onlyonce
   :type 'list
   :version "")
 
 (defcustom onlyonce-executed-p nil
-  "Indicates whether onlyonce.el has been executed or not.
-This variable is initialized to t after onlyonce-startup is executed and added to custom.el."
+  "Indicates whether onlyonce.el has been executed or not.  This variable is initialized to t after 'onlyonce-startup' is executed and added to custom.el."
   :group 'onlyonce
   :version ""
   :type 'boolean)
@@ -55,7 +53,7 @@ This variable is initialized to t after onlyonce-startup is executed and added t
   (load custom-file))
 
 (defun onlyonce--normalize-command-from-string (str)
-  "STR to normalize the command to a form that can be executed with onlyonce-startup."
+  "STR to normalize the command to a form that can be executed with 'onlyonce-startup'."
   (cl-check-type str string)
   (let* ((normalized '())
 	 (commands (s-split " " (s-replace "'" "" str))))
@@ -64,7 +62,7 @@ This variable is initialized to t after onlyonce-startup is executed and added t
     (reverse normalized)))
 
 (defun onlyonce--normalize-command-from-list (lis)
-  "LIS to normalize the command to a form that can be executed with onlyonce-startup."
+  "LIS to normalize the command to a form that can be executed with 'onlyonce-startup'."
   (cl-check-type lis list)
   (let* ((normalized '())
 	 (commands '()))
@@ -81,12 +79,12 @@ This variable is initialized to t after onlyonce-startup is executed and added t
     normalized))
 
 (defun onlyonce--normalize-command-from-symbol (sym)
-  "SYM to normalize the command to a form that can be executed with onlyonce-startup."
+  "SYM to normalize the command to a form that can be executed with 'onlyonce-startup'."
   (cl-check-type sym symbol)
   (list sym))
 
 (defun onlyonce--normalize-command (command)
-  "Interpret COMMANDs (and their arguments) and normalize them into a usable form with onlyonce-startup."
+  "Interpret COMMANDs (and their arguments) and normalize them into a usable form with 'onlyonce-startup'."
   (let* ((ret nil))
     (when (symbolp command)
       (setf ret (onlyonce--normalize-command-from-symbol command)))
