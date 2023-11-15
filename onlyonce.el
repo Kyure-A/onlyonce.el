@@ -1,4 +1,4 @@
-;;; onlyonce.el --- Short description of your project  -*- lexical-binding: t; -*-
+;;; onlyonce.el --- Package that executes a function that you want to execute *onlyonce* the first time  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2023  Kyure_A
 
