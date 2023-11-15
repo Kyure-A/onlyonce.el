@@ -24,7 +24,7 @@
 
 ;;; Commentary:
 
-;; Short description of your project
+;; A tool to run functions that you want to run only once during the installation of dotfiles in init.el.
 
 ;;; Code:
 
@@ -96,7 +96,7 @@ This variable is initialized to t after onlyonce-startup is executed and added t
     ret))
 
 (defun onlyonce-add (command)
-  "Add COMMAND (string) that you want to be loaded automatically.and executed *only once* during dotfiles installation."
+  "Add COMMAND (string) that you want to be loaded automatically and executed *only once* during dotfiles installation."
   (add-to-list 'onlyonce--executable-list (onlyonce--normalize-command command)))
 
 (defun onlyonce-startup ()
