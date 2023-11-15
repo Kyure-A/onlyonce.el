@@ -1,4 +1,4 @@
-;;; onlyonce.el --- Package that executes a function that you want to execute *onlyonce* the first time  -*- lexical-binding: t; -*-
+;;; onlyonce.el --- Executing a function that you wanna only once the first time   -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2023  Kyure_A
 
@@ -6,7 +6,7 @@
 ;; Keywords: tools
 
 ;; Version: 0.0.0
-;; Package-Requires: ((emacs "24.1"))
+;; Package-Requires: ((emacs "24.3"))
 ;; URL: https://github.com/Kyure-A/onlyonce.el
 
 ;; This program is free software; you can redistribute it and/or modify
