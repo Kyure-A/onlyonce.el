@@ -41,6 +41,7 @@
   "List of commands to execute with onlyonce.el.
 Commands in this list are normalized by onlyonce-convert-command-*."
   :group 'onlyonce
+  :type 'list
   :version "")
 
 (defcustom onlyonce-executed-p nil
