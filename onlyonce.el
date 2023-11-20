@@ -5,8 +5,8 @@
 ;; Author: Kyure_A <k@kyre.moe>
 ;; Keywords: tools
 
-;; Version: 0.0.0
-;; Package-Requires: ((emacs "24.3"))
+;; Version: 1.0.0
+;; Package-Requires: ((emacs "24.3") (s "1.13.0"))
 ;; URL: https://github.com/Kyure-A/onlyonce.el
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -48,9 +48,6 @@
   :group 'onlyonce
   :version ""
   :type 'boolean)
-
-(when (file-exists-p custom-file)
-  (load custom-file))
 
 (defun onlyonce--normalize-command-from-string (str)
   "STR to normalize the command to a form that can be executed with 'onlyonce-startup'."
