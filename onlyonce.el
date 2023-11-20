@@ -24,7 +24,7 @@
 
 ;;; Commentary:
 
-;; A tool to run functions that you want to run only once during the installation of dotfiles in init.el.
+;; Executing a function that you wanna only once the first time
 
 ;;; Code:
 
@@ -37,7 +37,7 @@
   :prefix "onlyonce-"
   :link '(url-link "https://github.com/Kyure-A/onlyonce.el"))
 
-(defcustom onlyonce--executable-list '()
+(defcustom onlyonce-executable-list '()
   "List of commands to execute with onlyonce.el.  Commands in this list are normalized by onlyonce-convert-command-*."
   :group 'onlyonce
   :type 'list
@@ -93,13 +93,13 @@
 
 (defun onlyonce-add (command)
   "Add COMMAND (string) that you want to be loaded automatically and executed *only once* during dotfiles installation."
-  (add-to-list 'onlyonce--executable-list (onlyonce--normalize-command command)))
+  (add-to-list 'onlyonce-executable-list (onlyonce--normalize-command command)))
 
 (defun onlyonce-startup ()
   "Execute a set of functions added that you want executed only once."
   (interactive)
   (unless (eval onlyonce-executed-p)
-    (progn (dolist (command-args onlyonce--executable-list t)
+    (progn (dolist (command-args onlyonce-executable-list t)
 	     (let* ((command (car command-args))
 		    (args (cdr command-args)))
 	       (progn (apply command args)
